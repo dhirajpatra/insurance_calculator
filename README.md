@@ -1,4 +1,4 @@
-# This will calculate insurance premium
+# This will calculate insurance premium for Car
 
 ### Requirements
 
