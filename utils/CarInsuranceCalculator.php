@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace utils;
@@ -7,12 +8,11 @@ use Utils\CalculatorAbstract;
 use Utils\CalculatorInterface;
 
 /**
- * Class CarInsuranceCalculator
- * @package utils
+ * Class CarInsuranceCalculator.
  */
 class CarInsuranceCalculator extends CalculatorAbstract implements CalculatorInterface
 {
-    private $commissionRate = 17;
+    private $commissionRate = COMMISSION_RATE;
 
     /**
      * CarInsuranceCalculator constructor.
@@ -26,14 +26,14 @@ class CarInsuranceCalculator extends CalculatorAbstract implements CalculatorInt
      * @param int $value
      * @param int $tax
      * @param int $installment
+     *
      * @return float
      */
-    public function calculate(int $value, int $tax, int $installment) : string
+    public function calculate(int $value, int $tax, int $installment): string
     {
-        $result =  [];
+        $result = [];
         try {
-
-            if ($this->dayOfTheWeek == "Fri" && $this->timeOfTheDay >= 15 && $this->timeOfTheDay <= 20) {
+            if ($this->dayOfTheWeek == 'Fri' && $this->timeOfTheDay >= 15 && $this->timeOfTheDay <= 20) {
                 $premiumRate = 13;
                 $basePrimium = $value * ($premiumRate / 100);
             } else {
@@ -43,18 +43,17 @@ class CarInsuranceCalculator extends CalculatorAbstract implements CalculatorInt
 
             $result = $this->calculator($tax, $installment, $basePrimium);
 
-            if (!empty($result)){
+            if (!empty($result)) {
                 $additionalData = [
                     'result' => $result,
                     'installment' => $installment,
                     'value' => $value,
                     'premiumRate' => $premiumRate,
                     'commissionRate' => $this->commissionRate,
-                    'tax' => $tax
+                    'tax' => $tax,
                 ];
                 $result = $this->createHtmlResult($result, $additionalData);
             }
-
         } catch (\Exception $ex) {
             echo $ex->getMessage();
         }
@@ -66,13 +65,13 @@ class CarInsuranceCalculator extends CalculatorAbstract implements CalculatorInt
      * @param int $value
      * @param int $tax
      * @param int $installment
+     *
      * @return array
      */
-    private function calculator(int $tax, int $installment, $basePrimium) : array
+    private function calculator(int $tax, int $installment, $basePrimium): array
     {
-        $result =  [];
+        $result = [];
         try {
-
             $commission = $basePrimium * ($this->commissionRate / 100);
             $totalTax = $basePrimium * ($tax / 100);
             $totalCost = ($basePrimium + $commission + $totalTax);
@@ -86,9 +85,6 @@ class CarInsuranceCalculator extends CalculatorAbstract implements CalculatorInt
             $result[1]['commission'] = $this->nearestCeil($result[0]['commission'] * $installment);
             $result[1]['totalTax'] = $this->nearestCeil($result[0]['totalTax'] * $installment);
             $result[1]['totalCost'] = $this->nearestCeil($result[0]['totalCost'] * $installment);
-
-
-
         } catch (\Exception $ex) {
             echo $ex->getMessage();
         }
@@ -98,9 +94,10 @@ class CarInsuranceCalculator extends CalculatorAbstract implements CalculatorInt
 
     /**
      * @param array $result
+     *
      * @return string
      */
-    private function createHtmlResult(array  $result, array $additionalData) : string
+    private function createHtmlResult(array  $result, array $additionalData): string
     {
         $html = '';
         try {
@@ -108,47 +105,46 @@ class CarInsuranceCalculator extends CalculatorAbstract implements CalculatorInt
                 $html .= '<div class="row"><div class="top"><i>Your Insurance Calculation</i></div></div>';
                 // header
                 $html .= '<div class="row"><div class="column"><b>Policy</b></div><div class="column">&nbsp;</div>';
-                for($i = 0; $i < $additionalData['installment']; $i++) {
+                for ($i = 0; $i < $additionalData['installment']; ++$i) {
                     $html .= '<div class="column"><b>'.($i + 1).' installment</b></div>';
                 }
                 $html .= '</div>';
                 $html .= '<div class="row"><div class="column">Value</div>';
-                $html .= '<div class="column">'. number_format($additionalData['value'], 2) .'</div>';
+                $html .= '<div class="column">'.number_format($additionalData['value'], 2).'</div>';
                 $html .= '</div>';
 
                 $html .= '<div class="row">';
                 $html .= '<div class="column">Base Premium ('.$additionalData['premiumRate'].'%)</div>';
-                $html .= '<div class="column">'. number_format($result[1]['basePrimium'], 2) .'</div>';
-                for($i = 0; $i < $additionalData['installment']; $i++) {
+                $html .= '<div class="column">'.number_format($result[1]['basePrimium'], 2).'</div>';
+                for ($i = 0; $i < $additionalData['installment']; ++$i) {
                     $html .= '<div class="column">'.number_format($result[0]['basePrimium'], 2).'</div>';
                 }
                 $html .= '</div>';
 
                 $html .= '<div class="row">';
                 $html .= '<div class="column">Commission ('.$additionalData['commissionRate'].'%)</div>';
-                $html .= '<div class="column">'. number_format($result[1]['commission'], 2) .'</div>';
-                for($i = 0; $i < $additionalData['installment']; $i++) {
+                $html .= '<div class="column">'.number_format($result[1]['commission'], 2).'</div>';
+                for ($i = 0; $i < $additionalData['installment']; ++$i) {
                     $html .= '<div class="column">'.number_format($result[0]['commission'], 2).'</div>';
                 }
                 $html .= '</div>';
 
                 $html .= '<div class="row">';
                 $html .= '<div class="column">Tax ('.$additionalData['tax'].'%)</div>';
-                $html .= '<div class="column">'. number_format($result[1]['totalTax'], 2) .'</div>';
-                for($i = 0; $i < $additionalData['installment']; $i++) {
+                $html .= '<div class="column">'.number_format($result[1]['totalTax'], 2).'</div>';
+                for ($i = 0; $i < $additionalData['installment']; ++$i) {
                     $html .= '<div class="column">'.number_format($result[0]['totalTax'], 2).'</div>';
                 }
                 $html .= '</div>';
 
                 $html .= '<div class="row">';
                 $html .= '<div class="column"><b>Total Cost</b></div>';
-                $html .= '<div class="column">'. number_format($result[1]['totalCost'], 2) .'</div>';
-                for($i = 0; $i < $additionalData['installment']; $i++) {
+                $html .= '<div class="column">'.number_format($result[1]['totalCost'], 2).'</div>';
+                for ($i = 0; $i < $additionalData['installment']; ++$i) {
                     $html .= '<div class="column"><b>'.number_format($result[0]['totalCost'], 2).'</b></div>';
                 }
                 $html .= '</div>';
             }
-
         } catch (\Exception $ex) {
             echo $ex->getMessage();
         }

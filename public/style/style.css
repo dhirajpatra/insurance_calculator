@@ -152,7 +152,7 @@ fieldset {
 
 .column {
     float: left;
-    width: 8%;
+    width: 10%;
     color: #FFFFFF;
     font-weight: bold;
     margin-right: 5px;
@@ -163,13 +163,19 @@ fieldset {
     content: "";
     display: table;
     clear: both;
+    color: #FFFFFF;
 }
 
 .top {
     float: left;
     width: 90%;
-    color: #FFFFFF;
+    color: #000000;
     font-size: large;
     font-weight: bold;
     text-align: center;
+}
+
+#error {
+    color: red;
+    font: bold;
 }
