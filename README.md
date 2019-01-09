@@ -1,6 +1,6 @@
 # This will calculate insurance premium for Car
 
-[Screenshot](blob/master/calculatorrunninginbrowser.png)
+[Screenshot of Calculator](calculatorrunninginbrowser.png)
 
 ### Requirements
 
