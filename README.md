@@ -1,5 +1,7 @@
 # This will calculate insurance premium for Car
 
+[Screenshot](blob/master/calculatorrunninginbrowser.png)
+
 ### Requirements
 
 *  PHP version 7.0 or newer
